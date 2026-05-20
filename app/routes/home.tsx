@@ -1,5 +1,7 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import HomePage from "~/pages/HomePage";
+import MainLayout from "~/layouts/MainLayout";
+import { getProducts } from "~/services/product.service";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,7 +10,14 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function loader() {
+  return getProducts(1, 4);
+}
+
 export default function Home() {
-  return <Welcome />;
-  
+  return (
+    <MainLayout>
+      <HomePage />
+    </MainLayout>
+  );
 }
