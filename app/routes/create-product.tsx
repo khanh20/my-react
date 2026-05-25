@@ -1,5 +1,7 @@
+import { Provider } from "react-redux";
 import MainLayout from "~/layouts/MainLayout";
 import CreateProduct from "~/pages/CreateProduct";
+import store from "~/redux/store";
 
 export function meta() {
   return [
@@ -10,8 +12,10 @@ export function meta() {
 
 export default function CreateProductRoute() {
   return (
-    <MainLayout>
-      <CreateProduct />
-    </MainLayout>
+    <Provider store={store}>
+      <MainLayout>
+        <CreateProduct />
+      </MainLayout>
+    </Provider>
   );
 }

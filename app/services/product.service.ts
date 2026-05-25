@@ -2,10 +2,18 @@ import axios from "axios";
 import type { CreateProductForm, Product } from "~/models/product.models";
 const PRODUCT_API_URL = import.meta.env.VITE_PRODUCT_API_URL;
 
-export const getProducts = async (page: number, limit: number) => {
-  const response = await axios.get<Product[]>(
-    `${PRODUCT_API_URL}?page=${page}&limit=${limit}`,
-  );
+export const getProducts = async (
+  page: number,
+  limit: number,
+  keyword?: string,
+) => {
+  const response = await axios.get<Product[]>(`${PRODUCT_API_URL}`, {
+    params: {
+      page,
+      limit,
+      search: keyword,
+    },
+  });
   return response.data;
 };
 
