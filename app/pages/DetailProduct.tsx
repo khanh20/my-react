@@ -5,7 +5,12 @@ import imgProduct from "../assets/img/pizza.png";
 import ButtonField from "~/components/Button";
 import LoadingLayout from "~/layouts/Loading";
 import { Form, Input, InputNumber, message, Modal } from "antd";
-import { deleteProduct, updateProduct } from "~/services/product.service";
+import type { AppDispatch } from "~/redux/store";
+import { useDispatch } from "react-redux";
+import {
+  fetchDeleteProduct,
+  fetchUpdateProduct,
+} from "~/redux/reducer/productThunk";
 
 const DetailProduct = () => {
   const initialProduct = useLoaderData<Product>();
@@ -15,19 +20,24 @@ const DetailProduct = () => {
   const [form] = Form.useForm<CreateProductForm>();
   const navigate = useNavigate();
   const { id } = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleConfirm = async () => {
     if (id) {
-      await deleteProduct(id);
+      await dispatch(fetchDeleteProduct(id)).unwrap();
       navigate("/");
     }
     setDeleteModal(false);
   };
+
   const handleCancel = () => {
     setDeleteModal(false);
   };
+
   const handleOpenModal = () => {
     setDeleteModal(true);
   };
+
   const handleOpenEditModal = () => {
     if (product) {
       form.setFieldsValue({
@@ -38,12 +48,15 @@ const DetailProduct = () => {
     }
     setEditModal(true);
   };
+
   const handleEdit = async (values: CreateProductForm) => {
     if (!id) {
       return;
     }
 
-    const updatedProduct = await updateProduct(id, values);
+    const updatedProduct = await dispatch(
+      fetchUpdateProduct({ id, values }),
+    ).unwrap();
     setProduct(updatedProduct);
     setEditModal(false);
     message.success("Update successfully");
@@ -79,7 +92,7 @@ const DetailProduct = () => {
           </div>
         </div>
         <Modal
-          title="Bạn có muốn xoá sản phẩm này không?"
+          title="Ban co muon xoa san pham nay khong?"
           open={deleteModal}
           onOk={handleConfirm}
           onCancel={handleCancel}

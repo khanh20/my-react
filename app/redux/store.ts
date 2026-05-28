@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { ToyBrick } from "lucide-react";
-import HomePageReducer from "./reducer/homePage.reducer";
+import productReducer from "./reducer/productSlice";
+
 const store = configureStore({
-  reducer: { homePage: HomePageReducer 
+  reducer: {
+    product: productReducer,
   },
 });
 // Lấy rootState và  appdispatch  từ store

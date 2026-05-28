@@ -3,8 +3,11 @@ import MainLayout from "~/layouts/MainLayout";
 import { LoaderCircle } from "lucide-react";
 import type { Route } from "./+types/detail-product";
 import { getProductById } from "~/services/product.service";
+import store from "~/redux/store";
+import { Provider } from "react-redux";
+import DetailProduct from "~/pages/DetailProduct";
 // import DetailProduct from "~/pages/DetailProduct";
-const DetailProduct = React.lazy(() => import("~/pages/DetailProduct"));
+// const DetailProduct = React.lazy(() => import("~/pages/DetailProduct"));
 
 export function meta() {
   return [
@@ -23,16 +26,10 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 export default function DetailProduceRoute() {
   return (
-    <MainLayout>
-      <Suspense
-        fallback={
-          <div className="flex flex-1 justify-center items-center w-full">
-            <LoaderCircle className="w-20 h-20 font-bold animate-spin" />
-          </div>
-        }
-      >
+    <Provider store={store}>
+      <MainLayout>
         <DetailProduct></DetailProduct>
-      </Suspense>
-    </MainLayout>
+      </MainLayout>
+    </Provider>
   );
 }

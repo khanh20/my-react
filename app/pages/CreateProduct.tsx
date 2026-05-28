@@ -1,20 +1,27 @@
 import { Form, Input, InputNumber, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import ButtonField from "~/components/Button";
 import type { CreateProductForm } from "~/models/product.models";
-import { createProduct } from "~/services/product.service";
+import { fetchCreateProduct } from "~/redux/reducer/productThunk";
+import type { AppDispatch, RootState } from "~/redux/store";
 
 const CreateProduct = () => {
   const [form] = Form.useForm<CreateProductForm>();
+  const dispatch = useDispatch<AppDispatch>();
+  const createProductForm = useSelector(
+    (state: RootState) => state.product.createProduct,
+  );
   const onFinish = async (values: CreateProductForm) => {
     try {
-      await createProduct(values);
+      const createdProduct = await dispatch(fetchCreateProduct(values)).unwrap();
+      console.log(createdProduct);
     } catch {
       message.error("Create failed");
       return;
     }
     message.success("Create succesfully");
     form.resetFields();
-    console.log(values);
+    console.log("values", values);
   };
   return (
     <main className=" flex-1 flex gap-10 p-2.5 flex-wrap w-full ">
