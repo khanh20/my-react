@@ -1,5 +1,5 @@
 import type { Product } from "~/models/product.models";
-import imgProduct from "../assets/img/pizza.png";
+import noImg from "../assets/img/noImg.png";
 import { Link } from "react-router";
 type Props = Product;
 const CardProduct = ({
@@ -16,7 +16,7 @@ const CardProduct = ({
         className="w-sm flex flex-col items-center"
       >
         <img
-          src={urlImg || imgProduct}
+          src={urlImg || noImg}
           alt={productName ?? ""}
           className="h-56 w-56"
         />

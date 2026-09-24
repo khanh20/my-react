@@ -1,9 +1,6 @@
 import CardProduct from "~/components/CardProduct";
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router";
-import type { Product } from "~/models/product.models";
 import ButtonField from "~/components/Button";
-import { getProducts } from "~/services/product.service";
 import { Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "~/redux/store";
@@ -13,29 +10,28 @@ import { fetchGetProduct } from "~/redux/reducer/productThunk";
 const { Search } = Input;
 
 const HomePage = () => {
-  const initialProducts = useLoaderData<Product[]>();
   const dispatch = useDispatch<AppDispatch>();
   const product = useSelector((state: RootState) => state.product.listProduct);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState("");
   const limit = 4;
 
   useEffect(() => {
-    dispatch(fetchGetProduct());
+    dispatch(fetchGetProduct({ page: 1, limit }));
   }, [dispatch]);
-  const handleShowMore = async () => {
-    if (isLoading) {
-      return;
-    }
 
+  const handleShowMore = async () => {
     setIsLoading(true);
 
-    const data = await getProducts(page + 1, limit);
-
-    dispatch(fetchGetProduct());
-
-    setPage((prev) => prev + 1);
-    setIsLoading(false);
+    try {
+      await dispatch(
+        fetchGetProduct({ page: page + 1, limit, keyword }),
+      ).unwrap();
+      setPage((prev) => prev + 1);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // useMemo
@@ -44,10 +40,9 @@ const HomePage = () => {
   // 3. Sẽ chạy lại nếu tham số dependence thay đổi
   // useRef
   const handleSearch = async (keyword: string) => {
-    const data = await getProducts(page, limit, keyword);
-    console.log(keyword);
-    console.log(data);
-    dispatch(fetchGetProduct());
+    setKeyword(keyword);
+    await dispatch(fetchGetProduct({ page: 1, limit, keyword })).unwrap();
+    setPage(1);
   };
   return (
     <LoadingLayout loading={product.length === 0}>

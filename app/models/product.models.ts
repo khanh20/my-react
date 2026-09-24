@@ -9,4 +9,5 @@ export type CreateProductForm = {
   productName: string;
   description: string;
   price: number;
+  urlImg: string;
 };

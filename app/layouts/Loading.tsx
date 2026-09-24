@@ -1,10 +1,10 @@
 import { LoaderCircle } from "lucide-react";
-import type { ReactElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 import TextField from "~/components/TextField";
 
 type Props = {
   loading?: boolean;
-  children: ReactElement;
+  children: ReactNode;
 };
 const LoadingLayout = ({ loading, children }: Props) => {
   return (

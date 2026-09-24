@@ -1,18 +1,27 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { CreateProductForm, Product } from "~/models/product.models";
-import CreateProduct from "~/pages/CreateProduct";
 import {
   createProduct,
   deleteProduct,
   getProductById,
   getProducts,
   updateProduct,
+  upLoadImg,
 } from "~/services/product.service";
+type UpdateProductType = {
+  id: string;
+  values: CreateProductForm;
+};
+type GetProductType = {
+  page: number;
+  limit: number;
+  keyword?: string;
+};
 
-export const fetchGetProduct = createAsyncThunk(
+export const fetchGetProduct = createAsyncThunk<Product[], GetProductType>(
   "product/setProducts",
-  async (_, thunkAPI) => {
-    const response = await getProducts(1, 4);
+  async ({ page, limit, keyword }, thunkAPI) => {
+    const response = await getProducts(page, limit, keyword);
     console.log("thunk gọi api", response);
     return response;
   },
@@ -33,10 +42,7 @@ export const fetchGetProductById = createAsyncThunk<Product, string>(
     return response;
   },
 );
-type UpdateProductType = {
-  id: string;
-  values: CreateProductForm;
-};
+
 export const fetchUpdateProduct = createAsyncThunk<Product, UpdateProductType>(
   "product/updateProduct",
   async ({ id, values }, thunkAPI) => {
@@ -50,6 +56,13 @@ export const fetchDeleteProduct = createAsyncThunk<Product, string>(
   async (id, thunkAPI) => {
     const response = await deleteProduct(id);
     console.log("response delete", response);
+    return response;
+  },
+);
+export const fetchUploadImg = createAsyncThunk<string, File>(
+  "product/upLoadImg",
+  async (file) => {
+    const response = await upLoadImg(file);
     return response;
   },
 );
